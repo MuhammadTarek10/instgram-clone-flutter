@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:instgramclone/utils/dimensions.dart';
+import 'package:instgramclone/utilities/dimensions.dart';
 
 class ResponsiveScreenLayout extends StatelessWidget {
   final Widget webScreenLayout;
