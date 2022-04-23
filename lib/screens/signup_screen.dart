@@ -81,6 +81,7 @@ class _SignupScreenState extends State<SignupScreen> {
       }
     }, builder: (context, state) {
       return Scaffold(
+        resizeToAvoidBottomInset: false,
         body: SafeArea(
           child: Container(
             padding: const EdgeInsets.symmetric(
