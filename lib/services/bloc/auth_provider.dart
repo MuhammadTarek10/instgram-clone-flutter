@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:instgramclone/services/bloc/auth_user.dart';
+import 'package:instgramclone/models/user.dart' as model;
 
 abstract class AuthProvider {
   Future<void> initialize();
@@ -9,6 +10,8 @@ abstract class AuthProvider {
     required String email,
     required String password,
   });
+
+  Future<model.User> getUserDetails();
 
   Future<AuthUser> createUser({
     required String email,

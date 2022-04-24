@@ -1,16 +1,17 @@
-
+import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:instgramclone/services/bloc/auth_event.dart';
 import 'package:instgramclone/services/bloc/auth_provider.dart';
 import 'package:instgramclone/services/bloc/auth_state.dart';
+import 'package:instgramclone/services/bloc/auth_user.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc(AuthProvider provider)
       : super(const AuthStateUninitialized(isLoading: true)) {
     on<AuthEventInitialize>((event, emit) async {
       await provider.initialize();
-      final user = provider.currentUser;
+      final user = await provider.currentUser;
       if (user == null) {
         emit(const AuthStateLoggedOut(
           exception: null,
@@ -19,7 +20,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } else if (!user.isEmailVerified) {
         emit(const AuthStateNeedsVerification(isLoading: false));
       } else {
-        emit(AuthStateLoggedIn(user: user, isLoading: false));
+        emit(AuthStateLoggedIn(
+            user: user, isLoading: false));
       }
     });
 
@@ -103,6 +105,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final password = event.password;
       try {
         final user = await provider.logIn(email: email, password: password);
+
         if (!user.isEmailVerified) {
           emit(const AuthStateLoggedOut(exception: null, isLoading: false));
           emit(const AuthStateNeedsVerification(isLoading: false));

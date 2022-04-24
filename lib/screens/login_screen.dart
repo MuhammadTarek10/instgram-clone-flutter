@@ -37,20 +37,19 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) async {
-        if (state is AuthStateLoggedOut) {
-          if (state.exception is UserNotFoundException) {
-            await showErrorDialog(context, 'Cannot find user');
-          } else if (state.exception is WrongPasswordAuthException ||
-              state.exception is InvalidEmailAuthException) {
-            await showErrorDialog(context, 'Wrong Credintials');
-          } else if (state.exception is GenericAuthException) {
-            await showErrorDialog(context, 'Authentication Error');
-          }
+    return BlocConsumer<AuthBloc, AuthState>(listener: (context, state) async {
+      if (state is AuthStateLoggedOut) {
+        if (state.exception is UserNotFoundException) {
+          await showErrorDialog(context, 'Cannot find user');
+        } else if (state.exception is WrongPasswordAuthException ||
+            state.exception is InvalidEmailAuthException) {
+          await showErrorDialog(context, 'Wrong Credintials');
+        } else if (state.exception is GenericAuthException) {
+          await showErrorDialog(context, 'Authentication Error');
         }
-      },
-      child: Scaffold(
+      }
+    }, builder: (context, state) {
+      return Scaffold(
         body: SafeArea(
           child: Container(
             padding: const EdgeInsets.symmetric(
@@ -99,7 +98,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         );
                   },
                   child: Container(
-                    child: const Text('Login'),
+                    child: state.isLoading
+                        ? const CircularProgressIndicator(color: primaryColor)
+                        : const Text('Login'),
                     width: double.infinity,
                     alignment: Alignment.center,
                     padding: const EdgeInsets.symmetric(vertical: 12),
@@ -173,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

@@ -1,20 +1,22 @@
-import 'dart:developer';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:instgramclone/exceptions/auth_exceptions.dart';
 import 'package:instgramclone/firebase_options.dart';
 import 'package:instgramclone/services/storage/storage_service.dart';
 import 'auth_user.dart';
 import 'auth_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart'
-    show FirebaseAuth, FirebaseAuthException, UserCredential;
+    show FirebaseAuth, FirebaseAuthException, User;
 import 'package:instgramclone/models/user.dart' as model;
 
 class FirebaseAuthProvider implements AuthProvider {
   final _storage = StorageService.firebase();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  static final _shared = FirebaseAuthProvider._sharedInstance();
+  FirebaseAuthProvider._sharedInstance();
+  factory FirebaseAuthProvider() => _shared;
 
   @override
   Future<void> initialize() async {
@@ -80,11 +82,8 @@ class FirebaseAuthProvider implements AuthProvider {
   @override
   AuthUser? get currentUser {
     final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      return AuthUser.fromFirebase(user);
-    } else {
-      return null;
-    }
+    if (user != null) return AuthUser.fromFirebase(user);
+    return null;
   }
 
   @override
@@ -152,5 +151,13 @@ class FirebaseAuthProvider implements AuthProvider {
     } catch (_) {
       throw GenericAuthException();
     }
+  }
+
+  @override
+  Future<model.User> getUserDetails() async {
+    User currentUser = FirebaseAuth.instance.currentUser!;
+    DocumentSnapshot snap =
+        await _firestore.collection('users').doc(currentUser.uid).get();
+    return model.User.fromSnap(snap);
   }
 }

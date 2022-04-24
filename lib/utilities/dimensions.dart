@@ -1,1 +1,0 @@
-const weScreenSize = 600;
