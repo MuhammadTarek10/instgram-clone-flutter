@@ -11,7 +11,6 @@ import 'package:instgramclone/responsive/responsive_screen_layout.dart';
 import 'package:instgramclone/responsive/web_screen_layout.dart';
 import 'package:instgramclone/screens/login_screen.dart';
 import 'package:instgramclone/screens/signup_screen.dart';
-import 'package:instgramclone/screens/test_screen.dart';
 import 'package:instgramclone/screens/verifiy_email_screen.dart';
 import 'package:instgramclone/services/bloc/auth_bloc.dart';
 import 'package:instgramclone/services/bloc/auth_event.dart';

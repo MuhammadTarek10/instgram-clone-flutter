@@ -18,4 +18,20 @@ class StorageService implements Storage {
         childName,
         isPost,
       );
+
+  @override
+  Future<void> uploadPost(
+    String uid,
+    String description,
+    Uint8List file,
+    String username,
+    String profImage,
+  ) =>
+      storage.uploadPost(
+        uid,
+        description,
+        file,
+        username,
+        profImage,
+      );
 }
